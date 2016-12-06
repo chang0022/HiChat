@@ -1,12 +1,7 @@
-var http = require('http');
+var express = require('express'),
+    app     = express(),
+    server  = require('http').createServer(app);
 
-server = http.createServer(function(req, res) {
-  res.writeHead(200, {
-    'Content-Type': 'text/plain'
-  });
-  res.write('hello world!');
-  res.end();
-});
-
+app.use('/', express.static(__dirname + '/www'));
 server.listen(8090);
 console.log('server started');
