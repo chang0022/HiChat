@@ -1,2 +1,2 @@
 # HiChat
-nodejs + webwork
+Node.js + WebSocket
