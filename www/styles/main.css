@@ -1,0 +1,24 @@
+html, body {
+  margin: 0;
+  background-color: #efefef;
+  font-family: "微软雅黑", sans-serif;
+}
+.wrapper {
+  padding: 5px;
+  margin: 0 auto;
+  width: 500px;
+  height: 640px;
+  background-color: #ddd;
+}
+#loginWrapper {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  padding-top: 200px;
+  display: block;
+  color: #fff;
+  background-color: rgba(5, 5, 5, .6);
+  text-align: center;
+}
