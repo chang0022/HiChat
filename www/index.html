@@ -6,6 +6,14 @@
 </head>
 <body>
   <h1>Hello World</h1>
+  <button type="button" id="sendBtn">Send</button>
 </body>
 <script src="http://cdn.bootcss.com/socket.io/1.6.0/socket.io.min.js"></script>
+<script>
+  var socket = io.connet(),
+      button = document.getElementById('sendBtn');
+      button.onclick = function() {
+        socket.emit('foo', 'hello');
+      }
+</script>
 </html>
