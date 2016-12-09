@@ -7,7 +7,7 @@ html, body {
   padding: 5px;
   margin: 0 auto;
   width: 500px;
-  height: 640px;
+  height: 666px;
   background-color: #ddd;
 }
 #loginWrapper {
@@ -20,5 +20,80 @@ html, body {
   display: block;
   color: #fff;
   background-color: rgba(5, 5, 5, .6);
+  text-align: center;
+}
+#nickWrapper {
+  display: none;
+}
+.banner {
+  width: 100%;
+  height: 100px;
+}
+.controls {
+  margin: 5px auto;
+  position: relative;
+  height: 100px;
+}
+#historyMsg {
+  padding: 2px;
+  height: 400px;
+  background-color: #fff;
+  overflow: auto;
+}
+#historyMsg img {
+  max-width: 50%;
+}
+.timespan {
+  color: #ddd;
+}
+.items {
+  height: 30px;
+}
+#colorStyle {
+  padding: 0;
+  width: 50px;
+  border: none;
+}
+.imageLable {
+  position: relative;
+}
+#sendImage {
+  position: absolute;
+  width: 52px;
+  left: 0;
+  opacity: 0;
+  overflow: hidden;
+}
+#messageInput {
+  width: 400px;
+  height: 90px;
+  resize: none;
+}
+#sendBtn {
+  float: right;
+  width: 50px;
+  height: 96px;
+}
+#emojiWrapper {
+  display: none;
+  position: absolute;
+  bottom: 105px;
+  width: 500px;
+  background-color: #aaa;
+  box-shadow: 0 0 10px #555;
+}
+#emojiWrapper img {
+  padding: 2px;
+  margin: 2px;
+  width: 25px;
+  height: 25px;
+}
+#emojiWrapper img:hover {
+  background-color: #0000ff;
+}
+.emoji {
+  display: inline;
+}
+footer {
   text-align: center;
 }
