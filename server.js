@@ -25,11 +25,11 @@ io.on('connection', function(socket) {
         socket.broadcast.emit('system', socket.nickname, users.length, 'logout');
     });
 
-    socket.on('postMsg', function(msg){
-        socket.broadcast.emit('newMsg', socket.nickname, msg);
+    socket.on('postMsg', function(msg, color){
+        socket.broadcast.emit('newMsg', socket.nickname, msg, color);
     });
 
-    socket.on('img', function(imgData) {
-        socket.broadcast.emit('newImg', socket.nickname, imgData);
+    socket.on('img', function(imgData, color) {
+        socket.broadcast.emit('newImg', socket.nickname, imgData, color);
     });
 });

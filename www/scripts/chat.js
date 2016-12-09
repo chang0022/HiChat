@@ -25,15 +25,6 @@ Chat.prototype = {
             nickNameInput.focus();
         });
 
-        $id('#loginBtn').addEventListener('click', function() {
-            var nickName = nickNameInput.value;
-            if (nickName.trim().length != 0) {
-                that.socket.emit('login', nickName);
-            } else {
-                nickNameInput.focus();
-            }
-        });
-
         that.socket.on('nickExisted', function() {
             info.textContent = '用户名已被占用'
         });
@@ -50,18 +41,33 @@ Chat.prototype = {
             status.textContent = userCount + ' 人在线';
         });
 
-        $id('#sendBtn').addEventListener('click', function() {
-            var msg = messageInput.value;
-            messageInput.value = '';
-            messageInput.focus();
-            if (msg.trim().length != 0) {
-                that.socket.emit('postMsg', msg);
-                that._displayNewMsg('me', msg);
+        that.socket.on('newMsg', function(user, msg, color) {
+            that._displayNewMsg(user, msg, color);
+        });
+
+        that.socket.on('newImg', function(user, img, color) {
+            that._displayImage(user, img, color);
+        });
+
+        $id('#loginBtn').addEventListener('click', function() {
+            var nickName = nickNameInput.value;
+            if (nickName.trim().length != 0) {
+                that.socket.emit('login', nickName);
+            } else {
+                nickNameInput.focus();
             }
         });
 
-        that.socket.on('newMsg', function(user, msg) {
-            that._displayNewMsg(user, msg);
+        $id('#sendBtn').addEventListener('click', function() {
+            var msg = messageInput.value,
+                color = $id('#colorStyle').value;
+            messageInput.value = '';
+            messageInput.focus();
+            if (msg.trim().length != 0) {
+                that.socket.emit('postMsg', msg, color);
+                that._displayNewMsg('me', msg, color);
+                return true;
+            }
         });
 
         $id('#sendImage').addEventListener('change', function() {
@@ -82,10 +88,6 @@ Chat.prototype = {
             }
         });
 
-        that.socket.on('newImg', function(user, img) {
-            that._displayImage(user, img);
-        });
-
         that._initiaEmoji();
         $id('#emoji').addEventListener('click', function(e) {
             var emojiWrapper = $id('#emojiWrapper');
@@ -98,11 +100,44 @@ Chat.prototype = {
                 emojiWrapper.style.display = 'none';
             }
         });
+
+        $id('#emojiWrapper').addEventListener('click', function(e) {
+            var target = e.target;
+            if (target.nodeName.toLowerCase() == 'img') {
+                messageInput.focus();
+                messageInput.value = messageInput.value + '[emoji:' + target.title+ ']';
+            }
+        });
+
+        nickNameInput.addEventListener('keyup', function(e) {
+            if (e.keyCode == 13) {
+                var nickName = nickNameInput.value;
+                if (nickName.trim().length != 0) {
+                    that.socket.emit('login', nickName);
+                }
+            }
+        });
+
+        messageInput.addEventListener('keyup', function(e) {
+            var msg = messageInput.value,
+                color = $id('#colorStyle').value;
+            if (e.keyCode == 13 && msg.trim().length != 0) {
+                messageInput.value = '';
+                that.socket.emit('postMsg', msg, color);
+                that._displayNewMsg('me', msg, color);
+                return true;
+            }
+        });
+
+        $id('#clearBtn').addEventListener('click', function() {
+            historyMsg.innerHTML = '';
+        });
     },
     _displayNewMsg: function(user, msg, color) {
         var container = $id('#historyMsg'),
             msgToDisplay = document.createElement('p'),
-            date = new Date().toTimeString().substr(0 ,8);
+            date = new Date().toTimeString().substr(0 ,8),
+            msg = this._showEmoji(msg);
         msgToDisplay.style.color = color || '#000';
         msgToDisplay.innerHTML = user + ' <span class="timespan">('+ date +')</span>：' + msg;
         container.appendChild(msgToDisplay);
@@ -113,7 +148,7 @@ Chat.prototype = {
             msgToDisplay = document.createElement('p'),
             date = new Date().toTimeString().substr(0 ,8);
          msgToDisplay.style.color = color || '#000';
-        msgToDisplay.innerHTML = user + ' <span class="timespan">('+ date +')</span>：<br/>' + '<a href="' + imgData + '" target="_blank"><img src="' + imgData + '"/></a>';
+        msgToDisplay.innerHTML = user + ' <span class="timespan">('+ date +')</span>：' + '<a href="' + imgData + '" target="_blank"><img src="' + imgData + '"/></a>';
         container.appendChild(msgToDisplay);
         container.scrollTop = container.scrollHeight;
     },
@@ -127,6 +162,21 @@ Chat.prototype = {
             docFragment.appendChild(emojiItem);
         }
         emojiContainer.appendChild(docFragment);
+    },
+    _showEmoji: function(msg) {
+        var match, result = msg,
+            reg = /\[emoji:\d+\]/g,
+            emojiIndex,
+            totalEmojiNum = $id('#emojiWrapper');
+        while (match = reg.exec(msg)) {
+            emojiIndex = match[0].slice(7, -1);
+            if (emojiIndex > totalEmojiNum) {
+                result = result.replace(match[0], '[X]');
+            } else {
+                result = result.replace(match[0], '<img class="emoji" src="../resource/emoji/' + emojiIndex + '.gif" />');
+            }
+        }
+        return result;
     }
 }
 

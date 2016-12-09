@@ -42,6 +42,7 @@ html, body {
 }
 #historyMsg img {
   max-width: 50%;
+  vertical-align: text-top;
 }
 .timespan {
   color: #ddd;
